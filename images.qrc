@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="select">images/check.png</file>
+        <file alias="delete">images/delete.png</file>
+        <file alias="folder">images/folder.png</file>
+        <file alias="left">images/rotate-left.png</file>
+        <file alias="file">images/file.png</file>
+        <file alias="remove">images/remove.png</file>
+        <file alias="right">images/rotate-right.png</file>
+        <file alias="resize">images/resize.png</file>
+        <file alias="options">images/options.png</file>
+    </qresource>
+</RCC>
