@@ -16,20 +16,18 @@ Tools::Tools(QObject *parent) : QObject(parent)
 
 }
 
-void Tools::openFolder(const QString &path, bool autoDetectRotation)
+void Tools::openFolder(const QUrl &url, bool autoDetectRotation)
 {
     QEventLoop loop;
     QTimer::singleShot(50,[&loop](){loop.quit();});
     loop.exec();
 
-    QString clean = path;
-    clean = clean.remove("file://");
+    QString path = url.toLocalFile();
+    qDebug() << "Add folder: " << path;
 
-    qDebug() << "Add folder: " << clean;
+    QList<QUrl> absoluteFilepaths;
 
-    QStringList absoluteFilepaths;
-
-    QFileInfo fileinfo(clean);
+    QFileInfo fileinfo(path);
     if(!fileinfo.exists())
         return;
 
@@ -42,20 +40,20 @@ void Tools::openFolder(const QString &path, bool autoDetectRotation)
         QStringList filenames = dir.entryList();
 
         foreach( const QString &filename, filenames)
-            absoluteFilepaths << dir.absoluteFilePath(filename);
+            absoluteFilepaths << QUrl::fromLocalFile(dir.absoluteFilePath(filename));
     }else{
-        absoluteFilepaths << fileinfo.absoluteFilePath();
+        absoluteFilepaths << QUrl::fromLocalFile(fileinfo.absoluteFilePath());
     }
 
     openFiles( absoluteFilepaths, autoDetectRotation );
 }
 
-void Tools::openFiles(const QStringList &files, bool autoDetectRotation)
+void Tools::openFiles(const QList<QUrl> &urls, bool autoDetectRotation)
 {
-    qDebug() << "Add files: " << files;
+    qDebug() << "Add files: " << urls;
 
-    foreach(QString filepath, files){
-        filepath = filepath.remove("file://");
+    foreach(QUrl url, urls){
+        const QString filepath = url.toLocalFile();
 
         QFileInfo fi(filepath);
 

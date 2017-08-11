@@ -5,6 +5,8 @@
 #include <QUuid>
 #include <QImage>
 
+#include <QUrl>
+
 
 class Tools : public QObject
 {
@@ -19,11 +21,17 @@ protected:
 signals:
     void load( const QString &path, int rotation );
 
+    void openFileDialog();
+    void openFolderDialog();
+
 public slots:
-    void openFolder( const QString &path, bool autoDetectRotation = true);
-    void openFiles(const QStringList &files, bool autoDetectRotation = true);
+    void openFolder(const QUrl &url, bool autoDetectRotation = true);
+    void openFiles(const QList<QUrl> &urls, bool autoDetectRotation = true);
 
     void removeFile( const QString &path );
+
+    inline void trigOpenFileDialog() { emit openFileDialog(); }
+    void trigOpenFolderDialog() { emit openFolderDialog(); }
 
 };
 
