@@ -1,13 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>qml/main.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>ImageItem.qml</file>
-        <file>DropButton.qml</file>
-        <file>Options.qml</file>
-        <file>LogoOptions.qml</file>
-        <file>OtherOptions.qml</file>
-        <file>SizeOptions.qml</file>
-        <file>ColorImage.qml</file>
+        <file>qml/ImageItem.qml</file>
+        <file>qml/DropButton.qml</file>
+        <file>qml/Options.qml</file>
+        <file>qml/LogoOptions.qml</file>
+        <file>qml/OtherOptions.qml</file>
+        <file>qml/SizeOptions.qml</file>
+        <file>qml/ColorImage.qml</file>
     </qresource>
 </RCC>

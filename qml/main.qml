@@ -268,4 +268,10 @@ ApplicationWindow {
             tools.openFiles( tmp, options.other.autoDetectRotation )
         }
     }
+
+    Connections{
+        target: tools
+        onOpenFolderDialog: folderDialog.open()
+        onOpenFileDialog: fileDialog.open()
+    }
 }

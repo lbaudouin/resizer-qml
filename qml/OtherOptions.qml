@@ -41,6 +41,7 @@ GroupBox{
         CheckBox{
             id: automaticFolderCheckbox
             text: qsTr("Automatic")
+            checked: true
         }
 
         TextField{

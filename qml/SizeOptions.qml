@@ -57,6 +57,7 @@ GroupBox{
                 editable: true
                 validator: IntValidator{ bottom: 1; top: 9999 }
                 model: [ 320, 480, 640, 720, 800, 1024, 1280, 2048, 4096 ]
+                editText: "1024"
 
                 Material.primary: editText === "" ? Material.Red : Material.Primary
                 Material.accent: editText === "" ? Material.Red : Material.Accent
@@ -85,6 +86,8 @@ GroupBox{
                 editable: true
                 validator: IntValidator{ bottom: 1; top: 100 }
                 model: [ 10, 20, 30, 33, 40, 50, 60, 66, 70, 80, 90, 100]
+                editText: "33"
+
             }
             Text{
                 text: qsTr("%")
