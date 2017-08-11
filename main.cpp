@@ -3,6 +3,11 @@
 
 #include <QQmlContext>
 
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+
+#include <QIcon>
+
 #include "tools.h"
 #include "resizer.h"
 
@@ -14,6 +19,39 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
+    QCoreApplication::setApplicationName("Resizer");
+    QCoreApplication::setApplicationVersion("1.0");
+
+    app.setWindowIcon( QIcon(":/images/resizer" ) );
+
+    // ----------------------- arguments ---------------------- //
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QCoreApplication::translate("main", "Resize an image batch"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("urls", QCoreApplication::translate("main", "URLs to open, optionally."), "[urls...]");
+
+
+    QCommandLineOption noWindowOption("n", QCoreApplication::translate("main", "No window"));
+    parser.addOption(noWindowOption);
+
+    QCommandLineOption openFileOption(QStringList() << "f" << "open-file",
+            QCoreApplication::translate("main", "Open file dialog at startup"));
+    parser.addOption(openFileOption);
+
+    QCommandLineOption openDirectoryOption(QStringList() << "d" << "open-directory",
+            QCoreApplication::translate("main", "Open folder dialog at startup"));
+    parser.addOption(openDirectoryOption);
+
+    parser.process(app);
+
+    const QStringList args = parser.positionalArguments();
+
+    bool noWindow = parser.isSet(noWindowOption);
+    bool openFileDialog = parser.isSet(openFileOption);
+    bool openDirectoryDialog = parser.isSet(openDirectoryOption);
+
+    // ----------------------- qml ---------------------- //
 
     QQmlApplicationEngine engine;
 
@@ -29,6 +67,16 @@ int main(int argc, char *argv[])
 
     if (engine.rootObjects().isEmpty())
         return -1;
+
+    // ----------------------- load ---------------------- //
+
+    foreach (const QString &arg, args) {
+        tools.openFolder( QUrl::fromLocalFile(arg) );
+    }
+
+    if(openFileDialog && openDirectoryDialog) openFileDialog = false;
+    if(openFileDialog) tools.trigOpenFileDialog();
+    if(openDirectoryDialog) tools.trigOpenFolderDialog();
 
     return app.exec();
 }
