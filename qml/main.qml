@@ -216,15 +216,15 @@ ApplicationWindow {
                 Layout.preferredWidth: 25
                 actions: ListModel{
                     ListElement{
-                        name: qsTr("Zip folder")
+                        name: qsTr("Create Zip")
                         action: "zip"
                     }
                     ListElement{
-                        name: qsTr("Open in temporary folder")
+                        name: qsTr("Temporary folder")
                         action: "temp"
                     }
                     ListElement{
-                        name: qsTr("Add a logo without resizing")
+                        name: qsTr("Just add a logo")
                         action: "logo"
                     }
                 }
