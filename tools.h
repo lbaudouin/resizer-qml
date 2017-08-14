@@ -16,6 +16,8 @@ public:
 
     int getRotation(const QString &brand, const quint16 value);
 
+    Q_INVOKABLE QString supportedFormats() const;
+
 protected:
 
 signals:
