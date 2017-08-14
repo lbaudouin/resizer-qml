@@ -19,7 +19,7 @@ Tools::Tools(QObject *parent) : QObject(parent)
 void Tools::openFolder(const QUrl &url, bool autoDetectRotation)
 {
     QEventLoop loop;
-    QTimer::singleShot(50,[&loop](){loop.quit();});
+    QTimer::singleShot(50, &loop, &QEventLoop::quit );
     loop.exec();
 
     QString path = url.toLocalFile();
@@ -27,14 +27,13 @@ void Tools::openFolder(const QUrl &url, bool autoDetectRotation)
 
     QList<QUrl> absoluteFilepaths;
 
-    QFileInfo fileinfo(path);
-    if(!fileinfo.exists())
+    QFileInfo fi(path);
+
+    if(!fi.exists())
         return;
 
-    if(fileinfo.isDir()){
-        QDir dir(fileinfo.absoluteFilePath());
-        if(!dir.exists())
-            return;
+    if(fi.isDir()){
+        QDir dir(fi.absoluteFilePath());
 
         dir.setFilter(QDir::Files);
         QStringList filenames = dir.entryList();
@@ -42,7 +41,7 @@ void Tools::openFolder(const QUrl &url, bool autoDetectRotation)
         foreach( const QString &filename, filenames)
             absoluteFilepaths << QUrl::fromLocalFile(dir.absoluteFilePath(filename));
     }else{
-        absoluteFilepaths << QUrl::fromLocalFile(fileinfo.absoluteFilePath());
+        absoluteFilepaths << QUrl::fromLocalFile(fi.absoluteFilePath());
     }
 
     openFiles( absoluteFilepaths, autoDetectRotation );
@@ -56,6 +55,15 @@ void Tools::openFiles(const QList<QUrl> &urls, bool autoDetectRotation)
         const QString filepath = url.toLocalFile();
 
         QFileInfo fi(filepath);
+
+        if( !fi.exists() ){
+            continue;
+        }
+
+        if( fi.isDir() ){
+            openFolder( url );
+            continue;
+        }
 
         //Check image format
         QImageReader reader(fi.absoluteFilePath());
@@ -91,6 +99,17 @@ int Tools::getRotation(const QString &brand, const quint16 value)
     }
 
     return 0;
+}
+
+QString Tools::supportedFormats() const
+{
+    QList<QByteArray> supported = QImageWriter::supportedImageFormats();
+    QStringList filters;
+    foreach(QByteArray filter, supported){
+        filters << "*." + QString(filter).toLower();
+        filters << "*." + QString(filter).toUpper();
+    }
+    return filters.join(" ");
 }
 
 
