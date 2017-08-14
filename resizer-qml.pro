@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     resizer.cpp
 
 RESOURCES += qml.qrc \
-    images.qrc
+    images.qrc \
+    i18n.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -38,3 +39,5 @@ HEADERS += \
     previewimageprovider.h \
     qexifimageheader/qexifimageheader.h \
     resizer.h
+
+TRANSLATIONS += i18n/resizer_fr.ts i18n/resizer_en.ts

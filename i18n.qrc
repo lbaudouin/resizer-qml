@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/lang">
+        <file alias="lang_en">i18n/resizer_en.qm</file>
+        <file alias="lang_fr">i18n/resizer_fr.qm</file>
+    </qresource>
+</RCC>

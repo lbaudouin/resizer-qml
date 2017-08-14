@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QTranslator>
 
 #include <QQmlContext>
 
@@ -24,7 +25,20 @@ int main(int argc, char *argv[])
 
     app.setWindowIcon( QIcon(":/images/resizer" ) );
 
+    // ----------------------- translate ---------------------- //
+
+    QString lang = QLocale::system().name().section('_', 0, 0);
+    lang = lang.toLower();
+
+    QTranslator *translator = new QTranslator();
+    if( translator->load( QString(":/lang/lang_%1").arg(lang) ) ){
+        qApp->installTranslator( translator );
+    }else{
+        qWarning() << "Failed to load language: " << lang;
+    }
+
     // ----------------------- arguments ---------------------- //
+
     QCommandLineParser parser;
     parser.setApplicationDescription(QCoreApplication::translate("main", "Resize an image batch"));
     parser.addHelpOption();
@@ -63,6 +77,10 @@ int main(int argc, char *argv[])
     Resizer resizer;
     engine.rootContext()->setContextProperty( "resizer", &resizer );
 
+    engine.rootContext()->setContextProperty( "version", app.applicationVersion() );
+
+    engine.rootContext()->setContextProperty( "noWindow", noWindow );
+
     engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
 
     if (engine.rootObjects().isEmpty())
@@ -71,12 +89,16 @@ int main(int argc, char *argv[])
     // ----------------------- load ---------------------- //
 
     foreach (const QString &arg, args) {
-        tools.openFolder( QUrl::fromLocalFile(arg) );
+        tools.openFiles( QList<QUrl>() << QUrl::fromLocalFile(arg) );
     }
 
-    if(openFileDialog && openDirectoryDialog) openFileDialog = false;
-    if(openFileDialog) tools.trigOpenFileDialog();
-    if(openDirectoryDialog) tools.trigOpenFolderDialog();
+    if(noWindow){
+
+    }else{
+        if(openFileDialog && openDirectoryDialog) openFileDialog = false;
+        if(openFileDialog) tools.trigOpenFileDialog();
+        if(openDirectoryDialog) tools.trigOpenFolderDialog();
+    }
 
     return app.exec();
 }
