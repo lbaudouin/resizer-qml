@@ -8,17 +8,23 @@ GroupBox{
     id: logoGroup
 
     function getValues(){
-        return "LOGO"
+        return {
+            "enabled": logoCheckBox.checked,
+            "url": logoInput.text,
+            "position": positionComboBox.model.get(positionComboBox.currentIndex).position,
+            "horizontal": horizontalSpinbox.value,
+            "vertical": verticalSpinbox.value,
+            "rotation": rotationSpinbox.value
+        }
     }
 
-    label: CheckBox {
-        id: logoCheckBox
-        checked: true
-        text: qsTr("Logo")
-    }
+    title: qsTr("Logo")
 
     FileDialog{
         id: logoInputDialog
+        title: qsTr("Choose a logo")
+        folder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
+        nameFilters: [qsTr("Image files") + "(" + tools.supportedFormats() +")"]
 
         onAccepted: {
             logoInput.text = file
@@ -27,22 +33,28 @@ GroupBox{
 
     Settings{
         id: settings
-        property alias url: logoInput.text
-        property alias position: positionComboBox.currentIndex
-        property alias horizontal: horizontalSpinbox.value
-        property alias vertical: verticalSpinbox.value
-        property alias rotation: rotationSpinbox.value
+        property alias logoEnabled: logoCheckBox.checked
+        property alias logoUrl: logoInput.text
+        property alias logoPosition: positionComboBox.currentIndex
+        property alias logoHorizontal: horizontalSpinbox.value
+        property alias logoVertical: verticalSpinbox.value
+        property alias logoRotation: rotationSpinbox.value
     }
 
     Column{
         id: col
-        enabled: logoCheckBox.checked
         width: parent.width
         spacing: 5
+        CheckBox {
+            id: logoCheckBox
+            checked: false
+            text: qsTr("Add the logo on images")
+        }
 
         Text{
             text: qsTr("Image")
         }
+
         RowLayout{
             width: parent.width
             TextField{
@@ -69,16 +81,41 @@ GroupBox{
                     source: logoInput.text
                     fillMode: Image.PreserveAspectFit
                 }
-                Column{
+                Row{
+                    spacing: 5
                     Text{
-                        anchors.horizontalCenter: parent.horizontalCenter
                         text: qsTr("Position")
+                        anchors.verticalCenter: parent.verticalCenter
                     }
                     ComboBox{
                         id: positionComboBox
+                        anchors.verticalCenter: parent.verticalCenter
                         width: implicitWidth * 2.0
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        model: [qsTr("Top Left"), qsTr("Top Right"), qsTr("Center"), qsTr("Bottom Left"), qsTr("Bottom Right")]
+                        textRole: "name"
+                        currentIndex: 4
+
+                        model: ListModel{
+                            ListElement{
+                                name: qsTr("Top Left")
+                                position: 0
+                            }
+                            ListElement{
+                                name: qsTr("Top Right")
+                                position: 1
+                            }
+                            ListElement{
+                                name: qsTr("Center")
+                                position: 2
+                            }
+                            ListElement{
+                                name: qsTr("Bottom Left")
+                                position: 3
+                            }
+                            ListElement{
+                                name: qsTr("Bottom Right")
+                                position: 4
+                            }
+                        }
                     }
                 }
             }

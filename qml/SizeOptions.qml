@@ -63,7 +63,15 @@ GroupBox{
                 Material.accent: editText === "" ? Material.Red : Material.Accent
                 Material.foreground: editText === "" ? Material.Red : Material.Foreground
                 Material.background: editText === "" ? Material.Red : Material.Background
-                //Material.shade: Material.Red
+
+                onEditTextChanged: {
+                    for(var i=0;i<count;i++){
+                        if( model[i] == parseInt(editText) ){
+                            currentIndex  = i
+                            return
+                        }
+                    }
+                }
             }
             Text{
                 text: qsTr("pixels")
@@ -88,6 +96,19 @@ GroupBox{
                 model: [ 10, 20, 30, 33, 40, 50, 60, 66, 70, 80, 90, 100]
                 editText: "33"
 
+                Material.primary: editText === "" ? Material.Red : Material.Primary
+                Material.accent: editText === "" ? Material.Red : Material.Accent
+                Material.foreground: editText === "" ? Material.Red : Material.Foreground
+                Material.background: editText === "" ? Material.Red : Material.Background
+
+                onEditTextChanged: {
+                    for(var i=0;i<count;i++){
+                        if( model[i] == parseInt(editText) ){
+                            currentIndex  = i
+                            return
+                        }
+                    }
+                }
             }
             Text{
                 text: qsTr("%")

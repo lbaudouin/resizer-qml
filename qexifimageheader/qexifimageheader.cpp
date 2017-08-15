@@ -1008,7 +1008,8 @@ bool QExifImageHeader::saveToJpeg(QIODevice *device) const
     stream >> segmentId;
     stream >> segmentLength;
 
-    if( segmentId == 0xFFE0 )
+    //New QImage as no exif, skip reading
+    /*if( segmentId == 0xFFE0 )
     {
         QByteArray jfif = device->read( segmentLength - 2 );
 
@@ -1084,7 +1085,7 @@ bool QExifImageHeader::saveToJpeg(QIODevice *device) const
         device->write( exif );
         device->write( remainder );
     }
-    else
+    else*/
     {
         QByteArray remainder = device->readAll();
 

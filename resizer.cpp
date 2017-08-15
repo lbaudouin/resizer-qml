@@ -2,6 +2,7 @@
 
 #include <QImageReader>
 #include <QImageWriter>
+#include <QPainter>
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -17,12 +18,19 @@ Resizer::Resizer(QObject *parent) : QObject(parent)
 {
     m_saverWatcher = new QFutureWatcher<bool>(this);
     connect(m_saverWatcher, &QFutureWatcher<bool>::finished, this, &Resizer::onFinished );
-    connect(m_saverWatcher, &QFutureWatcher<bool>::progressValueChanged, this, &Resizer::onProgressChanged );
+    connect(m_saverWatcher, &QFutureWatcher<bool>::progressRangeChanged, this, &Resizer::progressRangeChanged );
+    connect(m_saverWatcher, &QFutureWatcher<bool>::progressValueChanged, this, &Resizer::progressValueChanged );
 }
 
 Options Resizer::fromJsonOption(const QJsonObject &json)
 {
     Options options;
+
+    options.mode = OutputMode::NORMAL;
+
+    if(json.value("mode").toString() == "temp")  options.mode = OutputMode::TEMP;
+    else if(json.value("mode").toString() == "zip")  options.mode = OutputMode::ZIP;
+    else if(json.value("mode").toString() == "logo")  options.mode = OutputMode::LOGO;
 
     QJsonObject size = json.value("size").toObject();
 
@@ -30,12 +38,34 @@ Options Resizer::fromJsonOption(const QJsonObject &json)
     options.size.maxSize = size.value("size").toVariant().toInt();
     options.size.ratio = size.value("ratio").toVariant().toInt();
 
-    QJsonObject other = json.value("other").toObject();
+    QJsonObject logo = json.value("logo").toObject();
+    options.logo.enabled = logo.value("enabled").toBool();
+    if(options.logo.enabled){
+        QUrl url(logo.value("url").toString());
+        QFileInfo fi(url.toLocalFile());
 
-    options.outputFolder = "/tmp/" + other.value("outputFolder").toString();
-    options.closeAfterResize = other.value("closeAfterResize").toBool();
-    options.keepExif = other.value("keepExif").toBool();
-    options.openAfterResize = other.value("openAfterResize").toBool();
+        if(!fi.exists()){
+            options.logo.enabled = false;
+        }else{
+            QImageReader reader(fi.absoluteFilePath());
+            if(!QImageReader::supportedImageFormats().contains(reader.format())){
+                options.logo.enabled = false;
+            }else{
+                options.logo.image = QImage(fi.absoluteFilePath());
+            }
+        }
+    }
+    options.logo.position = (Position)logo.value("position").toInt();
+    options.logo.horizontalShift = logo.value("horizontal").toInt();
+    options.logo.verticalShift = logo.value("vertical").toInt();
+    options.logo.rotation = logo.value("rotation").toInt();
+
+    QJsonObject general = json.value("general").toObject();
+
+    options.outputFolder = "/tmp/" + general.value("outputFolder").toString();
+    options.closeAfterResize = general.value("closeAfterResize").toBool();
+    options.keepExif = general.value("keepExif").toBool();
+    options.openAfterResize = general.value("openAfterResize").toBool();
 
     QDir dir(options.outputFolder);
     if(!dir.exists()){
@@ -99,7 +129,7 @@ bool Resizer::save( const SaveInfo &info )
     QImageReader reader(fi.absoluteFilePath());
     QSize imageSize = reader.size();
 
-    if(info.options.noResize){
+    if(info.options.mode == OutputMode::LOGO ){
         small.load(fi.absoluteFilePath());
     }else{
         if(imageSize.isValid()){
@@ -135,38 +165,42 @@ bool Resizer::save( const SaveInfo &info )
         small = small.transformed(transform);
     }
 
-    /*QPoint shift;
-    if(info.addLogo && !info.logo.isNull()){
-        switch(info.logoPosition){
-        case PositionSelector::TOP_LEFT:
+    if(info.options.logo.enabled){
+        QSize logoSize = info.options.logo.image.size();
+
+        QPoint shift;
+
+        switch(info.options.logo.position){
+        case Position::TopLeft:
             break;
-        case PositionSelector::TOP_RIGHT:
-            shift.setX( small.width() - info.logo.width() - info.logoShifting.x() );
+        case Position::TopRight:
+            shift.setX( small.width() - logoSize.width() - info.options.logo.horizontalShift );
             break;
-        case PositionSelector::BOTTOM_LEFT:
-            shift.setY( small.height() - info.logo.height() - info.logoShifting.y() );
+        case Position::BottomLeft:
+            shift.setY( small.height() - logoSize.height() - info.options.logo.verticalShift );
             break;
-        case PositionSelector::BOTTOM_RIGHT:
-            shift.setX( small.width() - info.logo.width() - info.logoShifting.x() );
-            shift.setY( small.height() - info.logo.height() - info.logoShifting.y() );
+        case Position::BottomRight:
+            shift.setX( small.width() - logoSize.width() - info.options.logo.horizontalShift );
+            shift.setY( small.height() - logoSize.height() - info.options.logo.verticalShift );
             break;
-        case PositionSelector::CENTER:
-            shift.setX( small.width()/2.0 - info.logo.width()/2.0 + info.logoShifting.x() );
-            shift.setY( small.height()/2.0 - info.logo.height()/2.0 + info.logoShifting.y() );
+        case Position::Centre:
+            shift.setX( small.width()/2.0 - logoSize.width()/2.0 + info.options.logo.horizontalShift );
+            shift.setY( small.height()/2.0 - logoSize.height()/2.0 + info.options.logo.verticalShift );
             break;
         default: break;
         }
 
         QPainter painter(&small);
-        painter.drawImage(shift,info.logo);
+        painter.drawImage(shift,info.options.logo.image);
         painter.end();
-    }*/
+    }
 
     small.save(output);
 
     if(info.options.keepExif){
-        QExifImageHeader exif(fi.absoluteFilePath());
-        #if 0
+        QExifImageHeader exif;
+        qDebug() << exif.loadFromJpeg(fi.absoluteFilePath());
+#if 1
         QList<QExifImageHeader::ImageTag> list1 = exif.imageTags();
         QList<QExifImageHeader::ExifExtendedTag> list2 = exif.extendedTags();
         QList<QExifImageHeader::GpsTag> list3 = exif.gpsTags();
@@ -180,23 +214,19 @@ bool Resizer::save( const SaveInfo &info )
         for(int i=0;i<list3.size();i++){
             qDebug() << exif.value(list3[i]).toString();
         }
-        #endif
+#endif
 
-        //exif.setValue(QExifImageHeader::Orientation,0);
+        exif.setValue(QExifImageHeader::Orientation, (quint8)1);
         exif.setValue(QExifImageHeader::ImageWidth,small.width());
         exif.setValue(QExifImageHeader::ImageLength,small.height());
         exif.setValue(QExifImageHeader::PixelXDimension,small.width());
         exif.setValue(QExifImageHeader::PixelYDimension,small.height());
         exif.setThumbnail(QImage());
 
-        //exif.saveToJpeg(output);
+        exif.saveToJpeg(output);
     }
 
-    //qDebug() << "Save: " << output;
+    qDebug() << "Saved: " << output;
     return true;
 }
 
-void Resizer::onProgressChanged(int)
-{
-
-}

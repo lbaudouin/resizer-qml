@@ -3,11 +3,21 @@
 
 #include <QObject>
 #include <QFutureWatcher>
+#include <QImage>
 
 class QJsonArray;
 class QJsonObject;
 
+enum Position{ TopLeft = 0, TopRight, Centre, BottomLeft, BottomRight };
+enum OutputMode{ NORMAL = 0, TEMP, ZIP, LOGO };
+
 struct LogoOptions{
+    bool enabled;
+    QImage image;
+    Position position;
+    int horizontalShift;
+    int verticalShift;
+    int rotation;
 };
 
 struct SizeOptions{
@@ -20,6 +30,8 @@ struct Options{
     SizeOptions size;
     LogoOptions logo;
 
+
+    OutputMode mode;
     QString outputFolder;
     bool noResize;
     bool closeAfterResize;
@@ -52,13 +64,14 @@ private:
 
 signals:
     void finished();
+    void progressRangeChanged(int minimum, int maximum);
+    void progressValueChanged(int progressValue);
 
 public slots:
-    void resize(const QJsonArray &list , const QJsonObject &jsonOptions );
+    void resize(const QJsonArray &list , const QJsonObject &jsonOptions);
 
 protected slots:
     void onFinished();
-    void onProgressChanged(int);
 };
 
 #endif // RESIZER_H

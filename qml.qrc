@@ -6,8 +6,10 @@
         <file>qml/DropButton.qml</file>
         <file>qml/Options.qml</file>
         <file>qml/LogoOptions.qml</file>
-        <file>qml/OtherOptions.qml</file>
+        <file>qml/GeneralOptions.qml</file>
         <file>qml/SizeOptions.qml</file>
         <file>qml/ColorImage.qml</file>
+        <file>qml/RemoveDialog.qml</file>
+        <file>qml/ErrorDialog.qml</file>
     </qresource>
 </RCC>
