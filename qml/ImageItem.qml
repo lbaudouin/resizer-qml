@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
+import QtQuick.Controls.Material 2.1
 
 Rectangle{
     id: item
@@ -9,7 +10,9 @@ Rectangle{
     border.color: "black"
     border.width: 1
 
-    color: mouse.containsMouse ? "#ffb74d" : "white"
+    color: mouse.containsMouse ? Material.accent : "white"
+
+    signal remove()
 
     Image{
         id: image
@@ -107,8 +110,7 @@ Rectangle{
                 MouseArea{
                     anchors.fill: parent
                     onClicked: {
-                        tools.removeFile( path )
-                        imagesModel.remove(index)
+                        remove()
                     }
                 }
             }

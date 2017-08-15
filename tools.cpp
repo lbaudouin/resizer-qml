@@ -83,9 +83,14 @@ void Tools::openFiles(const QList<QUrl> &urls, bool autoDetectRotation)
     }
 }
 
-void Tools::removeFile(const QString &path)
+bool Tools::removeFile(const QString &path)
 {
     qDebug() << "Remove file: " << path;
+    QFileInfo fi(path);
+    if(!fi.exists())
+        return true;
+
+    return QFile::remove(fi.absoluteFilePath());
 }
 
 int Tools::getRotation(const QString &brand, const quint16 value)
@@ -110,6 +115,24 @@ QString Tools::supportedFormats() const
         filters << "*." + QString(filter).toUpper();
     }
     return filters.join(" ");
+}
+
+bool Tools::containsValidFiles(const QList<QUrl> &urls) const
+{
+    foreach(const QUrl &url, urls){
+        if(url.isLocalFile()){
+            QFileInfo fi(url.toLocalFile());
+
+            if(fi.isDir())
+                return true;
+
+            QImageReader reader(fi.absoluteFilePath());
+            if(QImageWriter::supportedImageFormats().contains(reader.format())){
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 

@@ -9,13 +9,13 @@ Page{
 
     property alias size: sizeOptions
     property alias logo: logoOptions
-    property alias other: otherOptions
+    property alias general: generalOptions
 
     function getValues(){
         return {
             size: size.getValues(),
             logo: logo.getValues(),
-            other: other.getValues()
+            general: general.getValues()
         }
     }
 
@@ -63,8 +63,8 @@ Page{
                 width: parent.width
             }
 
-            OtherOptions{
-                id: otherOptions
+            GeneralOptions{
+                id: generalOptions
                 width: parent.width
                 defaultFolder: sizeOptions.defaultFolder
             }

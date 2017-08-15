@@ -10,6 +10,7 @@ GroupBox{
 
     function getValues(){
         return {
+            "replace": replaceCheckbox.checked,
             "outputFolder": outputFolder.text,
             "keepExif": keepExifCheckbox.checked,
             "openAfterResize": openAfterResizeCheckbox.checked,
@@ -17,7 +18,7 @@ GroupBox{
         }
     }
 
-    title: qsTr("Options")
+    title: qsTr("General")
 
     property string defaultFolder
     property string customFolder
@@ -26,6 +27,7 @@ GroupBox{
 
     Settings{
         id: settings
+        property alias replace: replaceCheckbox.checked
         property alias automaticFolder: automaticFolderCheckbox.checked
         property alias keepExif: keepExifCheckbox.checked
         property alias autoDetectRotation: autoDetectRotationCheckbox.checked
@@ -51,37 +53,8 @@ GroupBox{
             selectByMouse: true
             readOnly: automaticFolderCheckbox.checked
         }
-
-        property alias replaceCheckbox: control
-        /*CheckBox{
-            id: control
-            text: qsTr("Replace files") + (checked ? " " + qsTr("(original files will be lost)") : "")
-            checked: false
-
-            indicator: CheckIndicator {
-                x: control.text ? (control.mirrored ? control.width - width - control.rightPadding : control.leftPadding) : control.leftPadding + (control.availableWidth - width) / 2
-                y: control.topPadding + (control.availableHeight - height) / 2
-                control: control
-                border.color: control.down ? "#b71c1c" : control.checked ? "#c62828" : Default.indicatorFrameColor
-            }
-
-            contentItem: Text {
-                leftPadding: control.indicator && !control.mirrored ? control.indicator.width + control.spacing : 0
-                rightPadding: control.indicator && control.mirrored ? control.indicator.width + control.spacing : 0
-
-                text: control.text
-                font: control.font
-                color: control.down ? "#b71c1c" : control.checked ? "#c62828" : Default.textColor
-                elide: Text.ElideRight
-                visible: control.text
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                opacity: enabled ? 1 : 0.3
-            }
-
-        }*/
         CheckBox{
-            id: control
+            id: replaceCheckbox
             text: qsTr("Replace files") + (checked ? " " + qsTr("(original files will be lost)") : "")
             checked: false
             Material.foreground: checked ? Material.Red : Material.Foreground
@@ -91,7 +64,7 @@ GroupBox{
             id: keepExifCheckbox
             text: qsTr("Keep exif")
             checked: false
-            enabled: false
+            //enabled: false
         }
         CheckBox{
             id: autoDetectRotationCheckbox

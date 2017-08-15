@@ -1,29 +1,30 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
+import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.3
 import Qt.labs.platform 1.0
-import QtQuick.Controls.Material 2.1
 
 ApplicationWindow {
     id: app
-    visible: true
+    visible: !noWindow
     width: 800
     height: 600
     title: qsTr("Resizer")
 
     signal focusEmptySizeOption()
 
-    property string version: "0.1"
+    function resize(mode){
 
-    function resize(){
+
         var opt = options.getValues();
 
         opt.noResize = false
+        opt.mode = mode
 
         console.debug( JSON.stringify(opt,null,2))
 
         if( (opt.size.mode === "size" && opt.size.size==="") ||
-            (opt.size.mode === "ratio" && opt.size.ratio==="") ){
+                (opt.size.mode === "ratio" && opt.size.ratio==="") ){
             optionsDrawer.open()
             app.focusEmptySizeOption()
             return
@@ -69,6 +70,17 @@ ApplicationWindow {
         target: tools
         onLoad: {
             imagesModel.addItem( path, rotation )
+        }
+    }
+
+    Connections{
+        target: resizer
+        onProgressRangeChanged:{
+            progressBar.from = minimum
+            progressBar.to = maximum
+        }
+        onProgressValueChanged:{
+            progressBar.value = progressValue
         }
     }
 
@@ -128,12 +140,57 @@ ApplicationWindow {
     }
 
 
-    Item{
+    DropArea{
+        id: dropArea
         anchors.fill: parent
         anchors.margins: 5
 
+        property bool dropping: false
+        property bool validDrop: false
+
+        onEntered: {
+            dropping = true
+
+            var tmp = []
+            for(var index in drag.urls)
+                tmp.push( drag.urls[index] )
+
+            validDrop = tools.containsValidFiles(tmp)
+            drag.accepted = true
+        }
+        onExited: {
+            dropping = false
+        }
+
+        onDropped: {
+            if(validDrop){
+                var tmp = []
+                for(var index in drop.urls)
+                    tmp.push( drop.urls[index] )
+
+                tools.openFiles( tmp )
+            }
+            drop.accepted = true
+            dropping = false
+        }
+
+
+        ColorImage{
+            id: dropIcon
+            visible: imagesModel.count === 0
+            anchors.centerIn: parent
+            image.source: "qrc:/images/drop"
+            color: dropArea.dropping ? dropArea.validDrop ? Material.color(Material.Green) : Material.color(Material.Red): Material.primary
+        }
+
         Flickable{
-            anchors.fill: parent
+            visible: imagesModel.count > 0
+
+            anchors.top: parent.top
+            anchors.bottom: progressBar.top
+            anchors.bottomMargin: 5
+            anchors.left: parent.left
+            anchors.right: parent.right
 
             contentWidth: width
             contentHeight: grid.height
@@ -156,9 +213,16 @@ ApplicationWindow {
                     model: imagesModel
 
                     delegate: ImageItem{
+                        onRemove:{
+                            removeDialog.path = path
+                            removeDialog.index = index
+                            removeDialog.open()
+                        }
                     }
                 }
             }
+
+            ScrollBar.vertical: ScrollBar { }
         }
 
         Drawer{
@@ -176,6 +240,17 @@ ApplicationWindow {
                 }
             }
         }
+
+        ProgressBar{
+            id: progressBar
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            visible: from !== to
+            from: 0
+            to: 0
+        }
     }
 
     footer: ToolBar{
@@ -184,7 +259,7 @@ ApplicationWindow {
             anchors.fill: parent
             spacing: 2
             Label{
-                text: imagesModel.count > 0 ? qsTr("%n images","Number of images", imagesModel.count ) : qsTr("Version: %1").arg(app.version)
+                text: imagesModel.count > 0 ? qsTr("%n images","Number of images", imagesModel.count ) : qsTr("Version: %1").arg(version)
             }
             Item { Layout.fillWidth: true }
 
@@ -208,7 +283,7 @@ ApplicationWindow {
                 }
 
                 onClicked: {
-                    resize();
+                    resize("normal");
                 }
             }
 
@@ -230,15 +305,7 @@ ApplicationWindow {
                 }
 
                 onActionTriggered: {
-                    if( action == "zip" ){
-                        console.debug( "zip" )
-                    }
-                    if( action == "temp" ){
-                        console.debug( "temp" )
-                    }
-                    if( action == "logo" ){
-                        console.debug( "logo" )
-                    }
+                    resize(action);
                 }
             }
         }
@@ -251,7 +318,7 @@ ApplicationWindow {
 
         onAccepted: {
             console.debug( folder )
-            tools.openFolder( folder, options.other.autoDetectRotation )
+            tools.openFolder( folder, options.general.autoDetectRotation )
         }
     }
 
@@ -260,13 +327,19 @@ ApplicationWindow {
         title: qsTr("Choose files")
         fileMode: FileDialog.OpenFiles
         folder: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
+        nameFilters: [qsTr("Image files") + "(" + tools.supportedFormats() +")"]
+
 
         onAccepted: {
             var tmp = []
             for(var i=0;i<files.length;i++)
                 tmp.push( files[i] )
-            tools.openFiles( tmp, options.other.autoDetectRotation )
+            tools.openFiles( tmp, options.general.autoDetectRotation )
         }
+    }
+
+    RemoveDialog{
+        id: removeDialog
     }
 
     Connections{

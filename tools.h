@@ -17,6 +17,7 @@ public:
     int getRotation(const QString &brand, const quint16 value);
 
     Q_INVOKABLE QString supportedFormats() const;
+    Q_INVOKABLE bool containsValidFiles(const QList<QUrl> &urls) const;
 
 protected:
 
@@ -30,7 +31,7 @@ public slots:
     void openFolder(const QUrl &url, bool autoDetectRotation = true);
     void openFiles(const QList<QUrl> &urls, bool autoDetectRotation = true);
 
-    void removeFile( const QString &path );
+    bool removeFile(const QString &path);
 
     inline void trigOpenFileDialog() { emit openFileDialog(); }
     void trigOpenFolderDialog() { emit openFolderDialog(); }

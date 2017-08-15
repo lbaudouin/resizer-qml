@@ -10,5 +10,6 @@
         <file alias="resize">images/resize.png</file>
         <file alias="options">images/options.png</file>
         <file alias="resizer">images/Resizer.png</file>
+        <file alias="drop">images/drop2.png</file>
     </qresource>
 </RCC>
