@@ -18,6 +18,7 @@ struct LogoOptions{
     int horizontalShift;
     int verticalShift;
     int rotation;
+    int opacity;
 };
 
 struct SizeOptions{

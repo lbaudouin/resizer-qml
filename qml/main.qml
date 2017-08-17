@@ -14,11 +14,11 @@ ApplicationWindow {
     signal focusEmptySizeOption()
 
     function resize(mode){
-
+        if(imagesModel.count === 0){
+            return
+        }
 
         var opt = options.getValues();
-
-        opt.noResize = false
         opt.mode = mode
 
         console.debug( JSON.stringify(opt,null,2))
@@ -150,12 +150,7 @@ ApplicationWindow {
 
         onEntered: {
             dropping = true
-
-            var tmp = []
-            for(var index in drag.urls)
-                tmp.push( drag.urls[index] )
-
-            validDrop = tools.containsValidFiles(tmp)
+            validDrop = tools.containsValidUrls(drag.urls)
             drag.accepted = true
         }
         onExited: {
@@ -264,21 +259,28 @@ ApplicationWindow {
             Item { Layout.fillWidth: true }
 
             Button{
+                id: resizeButton
+                enabled: progressBar.value === progressBar.to
+
                 contentItem: Row{
                     spacing: 5
                     leftPadding: 5
-                    Image {
+                    ColorImage {
                         anchors.verticalCenter: parent.verticalCenter
                         height: buttonText.height * 1.2
                         width: height
 
-                        source: "qrc:/images/resize"
-                        fillMode: Image.PreserveAspectFit
+                        image.source: "qrc:/images/resize"
+                        image.fillMode: Image.PreserveAspectFit
+                        //color: enabled ? Material.color(Material.Brown) : "gray"
+                        color: enabled ? "black" : "gray"
                     }
                     Text{
                         anchors.verticalCenter: parent.verticalCenter
                         id: buttonText
                         text: qsTr("Resize")
+                        //color: enabled ? Material.color(Material.Brown) : "gray"
+                        color: enabled ? "black" : "gray"
                     }
                 }
 

@@ -12,6 +12,8 @@
 #include <QDesktopServices>
 #include <QUrl>
 
+#include <zip/qzipwriter.h>
+
 #include <qexifimageheader/qexifimageheader.h>
 
 Resizer::Resizer(QObject *parent) : QObject(parent)
@@ -40,6 +42,13 @@ Options Resizer::fromJsonOption(const QJsonObject &json)
 
     QJsonObject logo = json.value("logo").toObject();
     options.logo.enabled = logo.value("enabled").toBool();
+
+    options.logo.position = (Position)logo.value("position").toInt();
+    options.logo.horizontalShift = logo.value("horizontal").toInt();
+    options.logo.verticalShift = logo.value("vertical").toInt();
+    options.logo.rotation = logo.value("rotation").toInt();
+    options.logo.opacity = logo.value("opacity").toInt();
+
     if(options.logo.enabled){
         QUrl url(logo.value("url").toString());
         QFileInfo fi(url.toLocalFile());
@@ -52,13 +61,14 @@ Options Resizer::fromJsonOption(const QJsonObject &json)
                 options.logo.enabled = false;
             }else{
                 options.logo.image = QImage(fi.absoluteFilePath());
+                if(options.logo.rotation != 0){
+                    QTransform t;
+                    t.rotate(options.logo.rotation);
+                    options.logo.image = options.logo.image.transformed( t );
+                }
             }
         }
     }
-    options.logo.position = (Position)logo.value("position").toInt();
-    options.logo.horizontalShift = logo.value("horizontal").toInt();
-    options.logo.verticalShift = logo.value("vertical").toInt();
-    options.logo.rotation = logo.value("rotation").toInt();
 
     QJsonObject general = json.value("general").toObject();
 
@@ -191,6 +201,7 @@ bool Resizer::save( const SaveInfo &info )
         }
 
         QPainter painter(&small);
+        painter.setOpacity(0.01 * info.options.logo.opacity);
         painter.drawImage(shift,info.options.logo.image);
         painter.end();
     }
@@ -199,31 +210,34 @@ bool Resizer::save( const SaveInfo &info )
 
     if(info.options.keepExif){
         QExifImageHeader exif;
-        qDebug() << exif.loadFromJpeg(fi.absoluteFilePath());
-#if 1
-        QList<QExifImageHeader::ImageTag> list1 = exif.imageTags();
-        QList<QExifImageHeader::ExifExtendedTag> list2 = exif.extendedTags();
-        QList<QExifImageHeader::GpsTag> list3 = exif.gpsTags();
+        if(exif.loadFromJpeg(fi.absoluteFilePath())){
+#if 0
+            QList<QExifImageHeader::ImageTag> list1 = exif.imageTags();
+            QList<QExifImageHeader::ExifExtendedTag> list2 = exif.extendedTags();
+            QList<QExifImageHeader::GpsTag> list3 = exif.gpsTags();
 
-        for(int i=0;i<list1.size();i++){
-            qDebug() << exif.value(list1[i]).toString();
-        }
-        for(int i=0;i<list2.size();i++){
-            qDebug() << exif.value(list2[i]).toString();
-        }
-        for(int i=0;i<list3.size();i++){
-            qDebug() << exif.value(list3[i]).toString();
-        }
+            for(int i=0;i<list1.size();i++){
+                qDebug() << exif.value(list1[i]).toString();
+            }
+            for(int i=0;i<list2.size();i++){
+                qDebug() << exif.value(list2[i]).toString();
+            }
+            for(int i=0;i<list3.size();i++){
+                qDebug() << exif.value(list3[i]).toString();
+            }
 #endif
 
-        exif.setValue(QExifImageHeader::Orientation, (quint8)1);
-        exif.setValue(QExifImageHeader::ImageWidth,small.width());
-        exif.setValue(QExifImageHeader::ImageLength,small.height());
-        exif.setValue(QExifImageHeader::PixelXDimension,small.width());
-        exif.setValue(QExifImageHeader::PixelYDimension,small.height());
-        exif.setThumbnail(QImage());
+            exif.setValue(QExifImageHeader::Orientation, (quint8)1);
+            exif.setValue(QExifImageHeader::ImageWidth,small.width());
+            exif.setValue(QExifImageHeader::ImageLength,small.height());
+            exif.setValue(QExifImageHeader::PixelXDimension,small.width());
+            exif.setValue(QExifImageHeader::PixelYDimension,small.height());
+            exif.setThumbnail(QImage());
 
-        exif.saveToJpeg(output);
+            exif.saveToJpeg(output);
+        }else{
+            qDebug() << "Failed to load Exif";
+        }
     }
 
     qDebug() << "Saved: " << output;

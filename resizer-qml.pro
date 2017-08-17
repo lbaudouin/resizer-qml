@@ -6,7 +6,8 @@ SOURCES += main.cpp \
     tools.cpp \
     previewimageprovider.cpp \
     qexifimageheader/qexifimageheader.cpp \
-    resizer.cpp
+    resizer.cpp \
+    zip/qzip.cpp
 
 RESOURCES += qml.qrc \
     images.qrc \
@@ -38,6 +39,13 @@ HEADERS += \
     tools.h \
     previewimageprovider.h \
     qexifimageheader/qexifimageheader.h \
-    resizer.h
+    resizer.h \
+    zip/qzipreader.h \
+    zip/qzipwriter.h
 
 TRANSLATIONS += i18n/resizer_fr.ts i18n/resizer_en.ts
+
+!contains( QT_CONFIG, system-zlib ) {
+    if( unix|win32-g++* ): LIBS += -lz
+    else: LIBS += zdll.lib
+}

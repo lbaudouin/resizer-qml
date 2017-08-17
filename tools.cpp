@@ -135,4 +135,21 @@ bool Tools::containsValidFiles(const QList<QUrl> &urls) const
     return false;
 }
 
+bool Tools::containsValidUrls(const QJsonObject &urls) const
+{
+    foreach(const QJsonValue &val, urls){
+        QUrl url(val.toString());
+        if(url.isLocalFile()){
+            QFileInfo fi(url.toLocalFile());
 
+            if(fi.isDir())
+                return true;
+
+            QImageReader reader(fi.absoluteFilePath());
+            if(QImageWriter::supportedImageFormats().contains(reader.format())){
+                return true;
+            }
+        }
+    }
+    return false;
+}

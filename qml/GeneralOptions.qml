@@ -1,11 +1,10 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
-import QtQuick.Controls.impl 2.2
+import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.2
 import Qt.labs.settings 1.0
-import QtQuick.Controls.Material 2.1
 
-GroupBox{
+Page{
     id: optionsGroup
 
     function getValues(){
@@ -18,7 +17,19 @@ GroupBox{
         }
     }
 
-    title: qsTr("General")
+    header:ToolBar{
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 0.01 * parent.width
+            anchors.rightMargin: 0.01 * parent.width
+            Label{
+                text: qsTr("General")
+                font.pointSize: 16
+            }
+        }
+        Material.background: Material.Orange
+    }
+
 
     property string defaultFolder
     property string customFolder
@@ -36,7 +47,12 @@ GroupBox{
     }
 
     Column{
-        width: parent.width
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 5
+        spacing: 5
+
         Text{
             text: qsTr("Output folder")
         }
@@ -80,6 +96,10 @@ GroupBox{
             id: closeAfterResizeCheckbox
             text: qsTr("Close after resize")
             checked: true
+        }
+        Item{
+            height: 5
+            width: parent.width
         }
     }
 }

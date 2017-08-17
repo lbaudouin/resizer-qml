@@ -4,47 +4,47 @@
 <context>
     <name>GeneralOptions</name>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="21"/>
+        <location filename="../qml/GeneralOptions.qml" line="26"/>
         <source>General</source>
         <translation>Général</translation>
     </message>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="41"/>
+        <location filename="../qml/GeneralOptions.qml" line="57"/>
         <source>Output folder</source>
         <translation>Dossier de sortie</translation>
     </message>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="45"/>
+        <location filename="../qml/GeneralOptions.qml" line="61"/>
         <source>Automatic</source>
         <translation>Automatique</translation>
     </message>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="58"/>
+        <location filename="../qml/GeneralOptions.qml" line="74"/>
         <source>Replace files</source>
         <translation>Remplacer les fichiers</translation>
     </message>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="58"/>
+        <location filename="../qml/GeneralOptions.qml" line="74"/>
         <source>(original files will be lost)</source>
         <translation>(les fichiers originaux vont être perdus)</translation>
     </message>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="65"/>
+        <location filename="../qml/GeneralOptions.qml" line="81"/>
         <source>Keep exif</source>
         <translation>Garder les information Exif</translation>
     </message>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="71"/>
+        <location filename="../qml/GeneralOptions.qml" line="87"/>
         <source>Auto detect rotation</source>
         <translation>Détection automatique de la rotation</translation>
     </message>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="76"/>
+        <location filename="../qml/GeneralOptions.qml" line="92"/>
         <source>Open folder after resize</source>
         <translation>Ouvrir le dossier après redimensionnement</translation>
     </message>
     <message>
-        <location filename="../qml/GeneralOptions.qml" line="81"/>
+        <location filename="../qml/GeneralOptions.qml" line="97"/>
         <source>Close after resize</source>
         <translation>Fermer après redimensionnement</translation>
     </message>
@@ -52,74 +52,79 @@
 <context>
     <name>LogoOptions</name>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="21"/>
+        <location filename="../qml/LogoOptions.qml" line="30"/>
         <source>Logo</source>
         <translation>Logo</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="25"/>
+        <location filename="../qml/LogoOptions.qml" line="39"/>
         <source>Choose a logo</source>
         <translation>Choisir un logo</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="27"/>
+        <location filename="../qml/LogoOptions.qml" line="41"/>
         <source>Image files</source>
         <translation>Images</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="51"/>
+        <location filename="../qml/LogoOptions.qml" line="69"/>
         <source>Add the logo on images</source>
         <translation>Ajouter le logo sur les images</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="55"/>
+        <location filename="../qml/LogoOptions.qml" line="73"/>
         <source>Image</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="87"/>
+        <location filename="../qml/LogoOptions.qml" line="108"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="99"/>
+        <location filename="../qml/LogoOptions.qml" line="120"/>
         <source>Top Left</source>
         <translation>Haut Gauche</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="103"/>
+        <location filename="../qml/LogoOptions.qml" line="124"/>
         <source>Top Right</source>
         <translation>Haut Droit</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="107"/>
+        <location filename="../qml/LogoOptions.qml" line="128"/>
         <source>Center</source>
         <translation>Centre</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="111"/>
+        <location filename="../qml/LogoOptions.qml" line="132"/>
         <source>Bottom Left</source>
         <translation>Bas Gauche</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="115"/>
+        <location filename="../qml/LogoOptions.qml" line="136"/>
         <source>Bottom Right</source>
         <translation>Bas Droite</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="129"/>
+        <location filename="../qml/LogoOptions.qml" line="151"/>
         <source>Horizontal</source>
         <translation>Horizontal</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="143"/>
+        <location filename="../qml/LogoOptions.qml" line="165"/>
         <source>Vertical</source>
         <translation>Vertical</translation>
     </message>
     <message>
-        <location filename="../qml/LogoOptions.qml" line="158"/>
+        <location filename="../qml/LogoOptions.qml" line="180"/>
         <source>Rotation</source>
         <translation>Rotation</translation>
+    </message>
+    <message>
+        <location filename="../qml/LogoOptions.qml" line="195"/>
+        <source>Opacity</source>
+        <translation>Opacité</translation>
     </message>
 </context>
 <context>
@@ -205,27 +210,27 @@
 <context>
     <name>SizeOptions</name>
     <message>
-        <location filename="../qml/SizeOptions.qml" line="37"/>
+        <location filename="../qml/SizeOptions.qml" line="43"/>
         <source>Size</source>
         <translation>Dimension</translation>
     </message>
     <message>
-        <location filename="../qml/SizeOptions.qml" line="49"/>
+        <location filename="../qml/SizeOptions.qml" line="64"/>
         <source>Maximum size</source>
         <translation>Taille maximale</translation>
     </message>
     <message>
-        <location filename="../qml/SizeOptions.qml" line="77"/>
+        <location filename="../qml/SizeOptions.qml" line="92"/>
         <source>pixels</source>
         <translation>pixels</translation>
     </message>
     <message>
-        <location filename="../qml/SizeOptions.qml" line="86"/>
+        <location filename="../qml/SizeOptions.qml" line="101"/>
         <source>Ratio</source>
         <translation>Ratio</translation>
     </message>
     <message>
-        <location filename="../qml/SizeOptions.qml" line="114"/>
+        <location filename="../qml/SizeOptions.qml" line="129"/>
         <source>%</source>
         <translation>%</translation>
     </message>
@@ -253,7 +258,7 @@
         <translation>Options</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="262"/>
+        <location filename="../qml/main.qml" line="257"/>
         <source>%n images</source>
         <comment>Number of images</comment>
         <translation>
@@ -262,7 +267,7 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="262"/>
+        <location filename="../qml/main.qml" line="257"/>
         <source>Version: %1</source>
         <translation>Version : %1</translation>
     </message>
@@ -272,32 +277,32 @@
         <translation>Redimensionner</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="294"/>
+        <location filename="../qml/main.qml" line="296"/>
         <source>Create Zip</source>
         <translation>Créer un Zip</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="298"/>
+        <location filename="../qml/main.qml" line="300"/>
         <source>Temporary folder</source>
         <translation>Dossier temporaire</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="302"/>
+        <location filename="../qml/main.qml" line="304"/>
         <source>Just add a logo</source>
         <translation>Ajouter le logo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="316"/>
+        <location filename="../qml/main.qml" line="318"/>
         <source>Choose a folder</source>
         <translation>Choisir un dossier</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="327"/>
+        <location filename="../qml/main.qml" line="329"/>
         <source>Choose files</source>
         <translation>Choisir des fichiers</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="330"/>
+        <location filename="../qml/main.qml" line="332"/>
         <source>Image files</source>
         <translation>Images</translation>
     </message>

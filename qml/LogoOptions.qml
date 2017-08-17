@@ -1,10 +1,12 @@
 import QtQuick 2.5
 import QtQuick.Controls 2.2
+import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.2
 import Qt.labs.settings 1.0
+
 import Qt.labs.platform 1.0
 
-GroupBox{
+Page{
     id: logoGroup
 
     function getValues(){
@@ -14,11 +16,23 @@ GroupBox{
             "position": positionComboBox.model.get(positionComboBox.currentIndex).position,
             "horizontal": horizontalSpinbox.value,
             "vertical": verticalSpinbox.value,
-            "rotation": rotationSpinbox.value
+            "rotation": rotationSpinbox.value,
+            "opacity": opacitySpinbox.value
         }
     }
 
-    title: qsTr("Logo")
+    header:ToolBar{
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 0.01 * parent.width
+            anchors.rightMargin: 0.01 * parent.width
+            Label{
+                text: qsTr("Logo")
+                font.pointSize: 16
+            }
+        }
+        Material.background: Material.Orange
+    }
 
     FileDialog{
         id: logoInputDialog
@@ -39,12 +53,16 @@ GroupBox{
         property alias logoHorizontal: horizontalSpinbox.value
         property alias logoVertical: verticalSpinbox.value
         property alias logoRotation: rotationSpinbox.value
+        property alias logoOpacity: opacitySpinbox.value
     }
 
     Column{
-        id: col
-        width: parent.width
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 5
         spacing: 5
+
         CheckBox {
             id: logoCheckBox
             checked: false
@@ -53,10 +71,12 @@ GroupBox{
 
         Text{
             text: qsTr("Image")
+            enabled: logoCheckBox.checked
         }
 
         RowLayout{
             width: parent.width
+            enabled: logoCheckBox.checked
             TextField{
                 id: logoInput
                 width: parent.width
@@ -71,6 +91,7 @@ GroupBox{
             }
         }
         RowLayout{
+            enabled: logoCheckBox.checked
             width: parent.width
             visible: logoInput.text != ""
             Column{
@@ -120,6 +141,7 @@ GroupBox{
                 }
             }
             Column{
+                enabled: logoCheckBox.checked
                 width: parent.width
 
                 Column{
@@ -167,7 +189,26 @@ GroupBox{
                         to: 360
                     }
                 }
+                Column{
+                    Layout.fillWidth: true
+                    Text{
+                        text: qsTr("Opacity")
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    SpinBox{
+                        id: opacitySpinbox
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        editable: true
+                        from: 0
+                        value: 100
+                        to: 100
+                    }
+                }
             }
+        }
+        Item{
+            height: 5
+            width: parent.width
         }
     }
 }

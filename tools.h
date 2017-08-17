@@ -5,6 +5,7 @@
 #include <QUuid>
 #include <QImage>
 
+#include <QDateTime>
 #include <QUrl>
 
 
@@ -18,6 +19,9 @@ public:
 
     Q_INVOKABLE QString supportedFormats() const;
     Q_INVOKABLE bool containsValidFiles(const QList<QUrl> &urls) const;
+    Q_INVOKABLE bool containsValidUrls(const QJsonObject &urls) const;
+
+    Q_INVOKABLE inline qint64 currentTimestamp() const { return QDateTime::currentMSecsSinceEpoch(); }
 
 protected:
 

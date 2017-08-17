@@ -4,14 +4,14 @@ import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.2
 import Qt.labs.settings 1.0
 
-GroupBox{
+Page{
     id: sizeGroup
 
     function getValues(){
         return {
             "mode" : sizeRadio.checked ? "size" : "ratio",
-            "size" : sizeComboBox.editText,
-            "ratio" : ratioCombobox.editText
+                                         "size" : sizeComboBox.editText,
+                                         "ratio" : ratioCombobox.editText
         }
     }
 
@@ -34,10 +34,25 @@ GroupBox{
         }
     }
 
-    title: qsTr("Size")
+    header:ToolBar{
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 0.01 * parent.width
+            anchors.rightMargin: 0.01 * parent.width
+            Label{
+                text: qsTr("Size")
+                font.pointSize: 16
+            }
+        }
+        Material.background: Material.Orange
+    }
+
 
     Column{
-        width: parent.width
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 5
         spacing: 5
 
         ButtonGroup { id: radioGroup }
@@ -115,6 +130,10 @@ GroupBox{
                 Layout.preferredWidth: 50
                 color: ratioRadio.checked ? "black" : "lightgray"
             }
+        }
+        Item{
+            height: 5
+            width: parent.width
         }
     }
 }
