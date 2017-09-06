@@ -9,7 +9,6 @@
 
 #include <QtConcurrent>
 
-#include <QDesktopServices>
 #include <QUrl>
 
 #include <zip/qzipwriter.h>
@@ -28,11 +27,10 @@ Options Resizer::fromJsonOption(const QJsonObject &json)
 {
     Options options;
 
-    options.mode = OutputMode::NORMAL;
-
     if(json.value("mode").toString() == "temp")  options.mode = OutputMode::TEMP;
     else if(json.value("mode").toString() == "zip")  options.mode = OutputMode::ZIP;
     else if(json.value("mode").toString() == "logo")  options.mode = OutputMode::LOGO;
+    else options.mode = OutputMode::NORMAL;
 
     QJsonObject size = json.value("size").toObject();
 
@@ -72,33 +70,28 @@ Options Resizer::fromJsonOption(const QJsonObject &json)
 
     QJsonObject general = json.value("general").toObject();
 
-    options.outputFolder = "/tmp/" + general.value("outputFolder").toString();
+    options.outputFolder = general.value("outputFolder").toString();
     options.closeAfterResize = general.value("closeAfterResize").toBool();
     options.keepExif = general.value("keepExif").toBool();
     options.openAfterResize = general.value("openAfterResize").toBool();
-
-    QDir dir(options.outputFolder);
-    if(!dir.exists()){
-        dir.mkdir(options.outputFolder);
-    }
 
     return options;
 }
 
 void Resizer::onFinished()
 {
+    qDebug() << m_outputFolders;
     if(m_openOutputFolderOnFinished){
-        QDesktopServices::openUrl( QUrl::fromLocalFile(m_outputFolder) );
-    }
-    if(m_closeOnFinished){
-        qApp->quit();
+        emit openOutputFolder( m_outputFolders, m_closeOnFinished );
+    }else{
+        if(m_closeOnFinished){
+            qApp->quit();
+        }
     }
 }
 
 void Resizer::resize(const QJsonArray &list, const QJsonObject &jsonOptions)
 {
-    qDebug() << list;
-
     if(list.isEmpty()){
         emit finished();
         return;
@@ -111,13 +104,30 @@ void Resizer::resize(const QJsonArray &list, const QJsonObject &jsonOptions)
 
     QList<SaveInfo> images;
 
+    m_outputFolders.clear();
+
+    bool tempFolder = options.mode == OutputMode::TEMP || options.mode == OutputMode::ZIP;
+
+    if(tempFolder){
+        options.outputFolder = QDir::tempPath() + QDir::separator() + "resizer_" + QString("%1").arg(qrand()%99999,5,10,QChar('0') );
+        qDebug() << options.outputFolder;
+        m_outputFolders << options.outputFolder;
+    }
+
     for(int i=0; i<list.size(); i++){
         SaveInfo info;
         info.options = options;
         info.rotation = list.at(i).toObject().value("imgRotation").toInt();
         info.filepath = list.at(i).toObject().value("path").toString();
         images << info;
+
+        if(!tempFolder){
+            QFileInfo fi(info.filepath);
+            m_outputFolders << fi.absolutePath() + QDir::separator() + options.outputFolder;
+        }
     }
+
+    m_outputFolders.removeDuplicates();
 
     m_saverWatcher->setFuture(QtConcurrent::mapped(images, save));
 }
@@ -127,12 +137,24 @@ bool Resizer::save( const SaveInfo &info )
     qDebug() << "Resizing: " << info.filepath;
 
     QFileInfo fi(info.filepath);
-    QString output = info.options.outputFolder + QDir::separator() + fi.fileName();
 
-    QDir dir(fi.absoluteDir());
+    QString outputFolder;
+
+    if(info.options.mode == OutputMode::TEMP || info.options.mode == OutputMode::ZIP){
+        outputFolder = info.options.outputFolder;
+    }else{
+        outputFolder = fi.absolutePath() + QDir::separator() + info.options.outputFolder;
+    }
+
+    QString outputFilepath = outputFolder + QDir::separator() + fi.fileName();
+
+    QDir dir(outputFolder);
     if(!dir.exists()){
-        qDebug() << fi.absoluteDir().absolutePath() + " doesn't exist";
-        return false;
+        dir.mkdir(outputFolder);
+        if(!dir.exists()){
+            qCritical() << outputFolder + " doesn't exist";
+            return false;
+        }
     }
 
     QImage small;
@@ -206,7 +228,7 @@ bool Resizer::save( const SaveInfo &info )
         painter.end();
     }
 
-    small.save(output);
+    small.save(outputFilepath);
 
     if(info.options.keepExif){
         QExifImageHeader exif;
@@ -234,13 +256,13 @@ bool Resizer::save( const SaveInfo &info )
             exif.setValue(QExifImageHeader::PixelYDimension,small.height());
             exif.setThumbnail(QImage());
 
-            exif.saveToJpeg(output);
+            exif.saveToJpeg(outputFilepath);
         }else{
             qDebug() << "Failed to load Exif";
         }
     }
 
-    qDebug() << "Saved: " << output;
+    qDebug() << "Saved: " << outputFilepath;
     return true;
 }
 

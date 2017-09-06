@@ -23,6 +23,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Resizer");
     QCoreApplication::setApplicationVersion("1.0");
 
+    qsrand( QDateTime::currentSecsSinceEpoch() );
+
     app.setWindowIcon( QIcon(":/images/resizer" ) );
 
     // ----------------------- translate ---------------------- //

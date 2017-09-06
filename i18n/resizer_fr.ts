@@ -243,14 +243,22 @@
         <translation>Resizer</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="111"/>
         <source>Open folder</source>
-        <translation>Ouvrir un dossier</translation>
+        <translation type="vanished">Ouvrir un dossier</translation>
+    </message>
+    <message>
+        <source>Open files</source>
+        <translation type="vanished">Ouvrir des fichiers</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="111"/>
+        <source>Add folder</source>
+        <translation>Ajouter un dossier</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="130"/>
-        <source>Open files</source>
-        <translation>Ouvrir des fichiers</translation>
+        <source>Add files</source>
+        <translation>Ajouter des fichiers</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="134"/>
@@ -307,27 +315,27 @@
         <translation>Images</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="43"/>
+        <location filename="../main.cpp" line="45"/>
         <source>Resize an image batch</source>
         <translation>Redimensionnement d&apos;images par lot</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="46"/>
+        <location filename="../main.cpp" line="48"/>
         <source>URLs to open, optionally.</source>
         <translation>fichiers/dossiers à ouvrir, optionnel.</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="49"/>
+        <location filename="../main.cpp" line="51"/>
         <source>No window</source>
         <translation>Pas d&apos;interface</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="53"/>
+        <location filename="../main.cpp" line="55"/>
         <source>Open file dialog at startup</source>
         <translation>Ouvrir la fenêtre de dialogue pour les fichiers au démarrage</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="57"/>
+        <location filename="../main.cpp" line="59"/>
         <source>Open folder dialog at startup</source>
         <translation>Ouvrir la fenêtre de dialogue pour les dossiers au démarrage</translation>
     </message>

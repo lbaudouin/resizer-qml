@@ -9,6 +9,8 @@
 
 #include <qexifimageheader/qexifimageheader.h>
 
+#include <QDesktopServices>
+
 #include <QDebug>
 
 Tools::Tools(QObject *parent) : QObject(parent)
@@ -91,6 +93,11 @@ bool Tools::removeFile(const QString &path)
         return true;
 
     return QFile::remove(fi.absoluteFilePath());
+}
+
+void Tools::openFolderInExplorer(const QString &path)
+{
+    QDesktopServices::openUrl( QUrl::fromLocalFile(path) );
 }
 
 int Tools::getRotation(const QString &brand, const quint16 value)

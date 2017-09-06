@@ -8,8 +8,8 @@
 class QJsonArray;
 class QJsonObject;
 
-enum Position{ TopLeft = 0, TopRight, Centre, BottomLeft, BottomRight };
-enum OutputMode{ NORMAL = 0, TEMP, ZIP, LOGO };
+enum class Position{ TopLeft = 0, TopRight, Centre, BottomLeft, BottomRight };
+enum class OutputMode{ NORMAL = 0, TEMP, ZIP, LOGO };
 
 struct LogoOptions{
     bool enabled;
@@ -61,12 +61,13 @@ private:
 
     bool m_closeOnFinished;
     bool m_openOutputFolderOnFinished;
-    QString m_outputFolder;
+    QStringList m_outputFolders;
 
 signals:
     void finished();
     void progressRangeChanged(int minimum, int maximum);
     void progressValueChanged(int progressValue);
+    void openOutputFolder(const QStringList &folders, bool close );
 
 public slots:
     void resize(const QJsonArray &list , const QJsonObject &jsonOptions);

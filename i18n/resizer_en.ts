@@ -205,12 +205,12 @@
     </message>
     <message>
         <location filename="../qml/main.qml" line="111"/>
-        <source>Open folder</source>
+        <source>Add folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="130"/>
-        <source>Open files</source>
+        <source>Add files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -268,27 +268,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="43"/>
+        <location filename="../main.cpp" line="45"/>
         <source>Resize an image batch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="46"/>
+        <location filename="../main.cpp" line="48"/>
         <source>URLs to open, optionally.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="49"/>
+        <location filename="../main.cpp" line="51"/>
         <source>No window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="53"/>
+        <location filename="../main.cpp" line="55"/>
         <source>Open file dialog at startup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="57"/>
+        <location filename="../main.cpp" line="59"/>
         <source>Open folder dialog at startup</source>
         <translation type="unfinished"></translation>
     </message>

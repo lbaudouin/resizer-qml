@@ -108,7 +108,7 @@ ApplicationWindow {
                     folderDialog.open()
                 }
                 ToolTip.visible: hovered
-                ToolTip.text: qsTr("Open folder")
+                ToolTip.text: qsTr("Add folder")
             }
             ToolButton{
                 height: 32
@@ -127,7 +127,7 @@ ApplicationWindow {
                     fileDialog.open()
                 }
                 ToolTip.visible: hovered
-                ToolTip.text: qsTr("Open files")
+                ToolTip.text: qsTr("Add files")
             }
             Item { Layout.fillWidth: true }
             ToolButton{
@@ -348,5 +348,20 @@ ApplicationWindow {
         target: tools
         onOpenFolderDialog: folderDialog.open()
         onOpenFileDialog: fileDialog.open()
+    }
+
+    Connections{
+        target: resizer
+        onOpenOutputFolder:{
+            if( folders.length === 1){
+                tools.openFolderInExplorer( folders[0] )
+            }else{
+                console.debug( JSON.stringify(folders ) )
+            }
+
+            if( folders.length <= 1 && close ){
+                Qt.quit()
+            }
+        }
     }
 }

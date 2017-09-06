@@ -40,6 +40,8 @@ public slots:
     inline void trigOpenFileDialog() { emit openFileDialog(); }
     void trigOpenFolderDialog() { emit openFolderDialog(); }
 
+    void openFolderInExplorer(const QString &path);
+
 };
 
 #endif // TOOLS_H
