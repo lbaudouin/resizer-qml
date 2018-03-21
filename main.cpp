@@ -19,13 +19,15 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     QGuiApplication app(argc, argv);
-    QCoreApplication::setApplicationName("Resizer");
-    QCoreApplication::setApplicationVersion("1.0");
+    app.setOrganizationName("fr.lbaudouin");
+    app.setApplicationName("Resizer");
+    app.setApplicationVersion("1.0");
+    app.setWindowIcon( QIcon(":/images/resizer" ) );
+
 
     qsrand( QDateTime::currentSecsSinceEpoch() );
-
-    app.setWindowIcon( QIcon(":/images/resizer" ) );
 
     // ----------------------- translate ---------------------- //
 
@@ -69,6 +71,8 @@ int main(int argc, char *argv[])
 
     // ----------------------- qml ---------------------- //
 
+    qmlRegisterType<Resizer>("Resizer", 1, 0, "Resizer");
+
     QQmlApplicationEngine engine;
 
     engine.addImageProvider(QLatin1String("preview"), new PreviewImageProvider);
@@ -80,7 +84,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty( "resizer", &resizer );
 
     engine.rootContext()->setContextProperty( "version", app.applicationVersion() );
-
     engine.rootContext()->setContextProperty( "noWindow", noWindow );
 
     engine.load(QUrl(QLatin1String("qrc:/qml/main.qml")));
@@ -95,7 +98,9 @@ int main(int argc, char *argv[])
     }
 
     if(noWindow){
-
+        if( args.isEmpty() ){
+            return 0;
+        }
     }else{
         if(openFileDialog && openDirectoryDialog) openFileDialog = false;
         if(openFileDialog) tools.trigOpenFileDialog();

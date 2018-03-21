@@ -38,6 +38,7 @@ Page{
 
     Settings{
         id: settings
+        category: "GeneralOptions"
         property alias replace: replaceCheckbox.checked
         property alias automaticFolder: automaticFolderCheckbox.checked
         property alias keepExif: keepExifCheckbox.checked
@@ -53,7 +54,7 @@ Page{
         anchors.margins: 5
         spacing: 5
 
-        Text{
+        Label{
             text: qsTr("Output folder")
         }
         CheckBox{

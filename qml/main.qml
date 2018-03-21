@@ -4,6 +4,8 @@ import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.3
 import Qt.labs.platform 1.0
 
+import Resizer 1.0
+
 ApplicationWindow {
     id: app
     visible: !noWindow
@@ -73,16 +75,13 @@ ApplicationWindow {
         }
     }
 
-    Connections{
+    /*Connections{
         target: resizer
         onProgressRangeChanged:{
             progressBar.from = minimum
             progressBar.to = maximum
         }
-        onProgressValueChanged:{
-            progressBar.value = progressValue
-        }
-    }
+    }*/
 
     header: ToolBar{
         id: toolbar
@@ -94,15 +93,10 @@ ApplicationWindow {
             ToolButton{
                 height: 32
                 width: height
-                contentItem: ColorImage {
-                    anchors.verticalCenter: parent.verticalCenter
-                    image.fillMode: Image.PreserveAspectFit
-                    image.source: "qrc:/images/folder"
+                icon{
+                    source: "qrc:/images/folder"
                     height: 32
-                    width: height
-                    image.sourceSize.width: height
-                    image.sourceSize.height: height
-                    color: Material.foreground
+                    width: 32
                 }
                 onClicked: {
                     folderDialog.open()
@@ -113,15 +107,10 @@ ApplicationWindow {
             ToolButton{
                 height: 32
                 width: height
-                contentItem: ColorImage {
-                    anchors.verticalCenter: parent.verticalCenter
-                    image.fillMode: Image.PreserveAspectFit
-                    image.source: "qrc:/images/file"
+                icon{
+                    source: "qrc:/images/file"
                     height: 32
-                    width: height
-                    image.sourceSize.width: height
-                    image.sourceSize.height: height
-                    color: Material.foreground
+                    width: 32
                 }
                 onClicked: {
                     fileDialog.open()
@@ -242,9 +231,10 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            visible: from !== to
+            visible: resizer.progress >= 0
             from: 0
-            to: 0
+            to: 100
+            value: resizer.progress
         }
     }
 
@@ -258,34 +248,14 @@ ApplicationWindow {
             }
             Item { Layout.fillWidth: true }
 
-            Button{
-                id: resizeButton
-                enabled: progressBar.value === progressBar.to
-
-                contentItem: Row{
-                    spacing: 5
-                    leftPadding: 5
-                    ColorImage {
-                        anchors.verticalCenter: parent.verticalCenter
-                        height: buttonText.height * 1.2
-                        width: height
-
-                        image.source: "qrc:/images/resize"
-                        image.fillMode: Image.PreserveAspectFit
-                        //color: enabled ? Material.color(Material.Brown) : "gray"
-                        color: enabled ? "black" : "gray"
-                    }
-                    Text{
-                        anchors.verticalCenter: parent.verticalCenter
-                        id: buttonText
-                        text: qsTr("Resize")
-                        //color: enabled ? Material.color(Material.Brown) : "gray"
-                        color: enabled ? "black" : "gray"
-                    }
+           Button{
+                icon{
+                    source: "qrc:/images/resize"
                 }
+                text: qsTr("Resize")
 
                 onClicked: {
-                    resize("normal");
+                    resize(Resizer.NormalMode);
                 }
             }
 
@@ -294,15 +264,15 @@ ApplicationWindow {
                 actions: ListModel{
                     ListElement{
                         name: qsTr("Create Zip")
-                        action: "zip"
+                        action: Resizer.ZipMode
                     }
                     ListElement{
                         name: qsTr("Temporary folder")
-                        action: "temp"
+                        action: Resizer.TempMode
                     }
                     ListElement{
                         name: qsTr("Just add a logo")
-                        action: "logo"
+                        action: Resizer.LogoMode
                     }
                 }
 
@@ -342,6 +312,8 @@ ApplicationWindow {
 
     RemoveDialog{
         id: removeDialog
+        x: (app.width - width) * 0.5
+        y: app.height * 0.5 - height
     }
 
     Connections{

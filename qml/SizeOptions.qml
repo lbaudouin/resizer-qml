@@ -19,8 +19,11 @@ Page{
 
     Settings{
         id: settings
+        category: "SizeOptions"
         property alias size: sizeComboBox.editText
         property alias ratio: ratioCombobox.editText
+        property alias size_mode: sizeRadio.checked
+        property alias ratio_mode: ratioRadio.checked
     }
 
     Connections{
@@ -88,10 +91,10 @@ Page{
                     }
                 }
             }
-            Text{
+            Label{
                 text: qsTr("pixels")
                 Layout.preferredWidth: 50
-                color: sizeRadio.checked ? "black" : "lightgray"
+                enabled: sizeRadio.checked
             }
         }
         RowLayout{
@@ -125,10 +128,10 @@ Page{
                     }
                 }
             }
-            Text{
+            Label{
                 text: qsTr("%")
                 Layout.preferredWidth: 50
-                color: ratioRadio.checked ? "black" : "lightgray"
+                enabled: ratioRadio.checked
             }
         }
         Item{

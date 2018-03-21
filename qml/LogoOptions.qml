@@ -47,6 +47,7 @@ Page{
 
     Settings{
         id: settings
+        category: "LogoOptions"
         property alias logoEnabled: logoCheckBox.checked
         property alias logoUrl: logoInput.text
         property alias logoPosition: positionComboBox.currentIndex
@@ -67,11 +68,6 @@ Page{
             id: logoCheckBox
             checked: false
             text: qsTr("Add the logo on images")
-        }
-
-        Text{
-            text: qsTr("Image")
-            enabled: logoCheckBox.checked
         }
 
         RowLayout{
@@ -104,7 +100,7 @@ Page{
                 }
                 Row{
                     spacing: 5
-                    Text{
+                    Label{
                         text: qsTr("Position")
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -146,7 +142,7 @@ Page{
 
                 Column{
                     Layout.fillWidth: true
-                    Text{
+                    Label{
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: qsTr("Horizontal")
                     }
@@ -161,7 +157,7 @@ Page{
                 }
                 Column{
                     Layout.fillWidth: true
-                    Text{
+                    Label{
                         text: qsTr("Vertical")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
@@ -176,7 +172,7 @@ Page{
                 }
                 Column{
                     Layout.fillWidth: true
-                    Text{
+                    Label{
                         text: qsTr("Rotation")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
@@ -191,7 +187,7 @@ Page{
                 }
                 Column{
                     Layout.fillWidth: true
-                    Text{
+                    Label{
                         text: qsTr("Opacity")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
