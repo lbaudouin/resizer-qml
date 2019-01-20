@@ -44,7 +44,25 @@ HEADERS += \
     zip/qzipreader.h \
     zip/qzipwriter.h
 
+LANGUAGES = fr en
+
 TRANSLATIONS += i18n/resizer_fr.ts i18n/resizer_en.ts
+
+TRANSLATIONS_FILES =
+
+qtPrepareTool(LRELEASE, lrelease)
+for(tsfile, TRANSLATIONS) {
+ qmfile = $$shadowed($$tsfile)
+ qmfile ~= s,.ts$,.qm,
+ qmdir = $$dirname(qmfile)
+ !exists($$qmdir) {
+ mkpath($$qmdir)|error("Aborting.")
+ }
+ command = $$LRELEASE -removeidentical $$tsfile -qm $$qmfile
+ system($$command)|error("Failed to run: $$command")
+ TRANSLATIONS_FILES += $$qmfile
+}
+
 
 !contains( QT_CONFIG, system-zlib ) {
     if( unix|win32-g++* ): LIBS += -lz

@@ -92,11 +92,22 @@ Page{
             visible: logoInput.text != ""
             Column{
                 Layout.fillWidth: true
-                Image{
+                Rectangle{
                     width: 200
                     height: 200
-                    source: logoInput.text
-                    fillMode: Image.PreserveAspectFit
+                    color: background%3 == 0 ? "transparent" : background%3 == 1 ? "white" : "black"
+                    property int background: 0
+                    Image{
+                        anchors.fill: parent
+                        source: logoInput.text
+                        fillMode: Image.PreserveAspectFit
+                    }
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: {
+                            parent.background++
+                        }
+                    }
                 }
                 Row{
                     spacing: 5

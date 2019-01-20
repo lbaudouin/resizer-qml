@@ -93,11 +93,22 @@ ApplicationWindow {
             ToolButton{
                 height: 32
                 width: height
+
+                ColorImage{
+                    image.source: "qrc:/images/folder"
+                    color: "white"
+                    height: 32
+                    width: 32
+                    anchors.centerIn: parent
+                }
+                /*
+                //Need Qt 5.10
                 icon{
                     source: "qrc:/images/folder"
                     height: 32
                     width: 32
-                }
+                }*/
+
                 onClicked: {
                     folderDialog.open()
                 }
@@ -107,11 +118,22 @@ ApplicationWindow {
             ToolButton{
                 height: 32
                 width: height
+
+                ColorImage{
+                    image.source: "qrc:/images/file"
+                    color: "white"
+                    height: 32
+                    width: 32
+                    anchors.centerIn: parent
+                }
+                /*
+                //Need Qt 5.10
                 icon{
                     source: "qrc:/images/file"
                     height: 32
                     width: 32
-                }
+                }*/
+
                 onClicked: {
                     fileDialog.open()
                 }
@@ -164,7 +186,7 @@ ApplicationWindow {
             visible: imagesModel.count === 0
             anchors.centerIn: parent
             image.source: "qrc:/images/drop"
-            color: dropArea.dropping ? dropArea.validDrop ? Material.color(Material.Green) : Material.color(Material.Red): Material.primary
+            color: dropArea.dropping ? dropArea.validDrop ? Material.color(Material.Green) : Material.color(Material.Red) : Material.color(Material.Grey)
         }
 
         Flickable{
@@ -248,10 +270,13 @@ ApplicationWindow {
             }
             Item { Layout.fillWidth: true }
 
-           Button{
+            Button{
+                /*
+                //Need Qt 5.10
                 icon{
                     source: "qrc:/images/resize"
-                }
+                }*/
+
                 text: qsTr("Resize")
 
                 onClicked: {
